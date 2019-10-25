@@ -20,4 +20,14 @@ module Enumerable
       container
     end
   end
+
+  def my_select
+    container = to_a
+    aux_container = []
+    container.my_each do |el|
+      aux_container << el if yield(el)
+    end
+    aux_container
+  end
+
 end
