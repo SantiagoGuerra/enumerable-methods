@@ -42,4 +42,18 @@ module Enumerable
     end
     condition
   end
+
+  def my_any?
+    container = to_a
+    len = container.size
+    condition = true
+    counter = 0
+    loop do
+      condition = yield(container[counter])
+      counter += 1
+      break if counter >= len || condition
+    end
+    condition
+  end
+
 end
