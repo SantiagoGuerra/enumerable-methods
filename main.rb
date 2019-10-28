@@ -72,4 +72,15 @@ module Enumerable
       true
     end
   end
+
+  def my_count *num
+    container = to_a
+    if block_given?
+      container.my_select {|item| yield(item)}.size
+    elsif num.empty?
+      container.size
+    else
+      container.my_select {|item| item == num[0]}.size
+    end
+  end
 end
