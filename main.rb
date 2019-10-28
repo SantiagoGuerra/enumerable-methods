@@ -83,4 +83,11 @@ module Enumerable
       container.my_select {|item| item == num[0]}.size
     end
   end
+
+  def my_map
+    container = to_a
+    aux_container = []
+    container.my_each { |item| aux_container << yield(item)}
+    aux_container
+  end
 end
