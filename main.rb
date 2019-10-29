@@ -33,17 +33,19 @@ module Enumerable
     aux_container
   end
 
-  def my_all?
+  def my_all?(pattern = nil)
     container = to_a
     len = container.size
-    condition = true
+    condition = !container.empty? && pattern.nil? ? false : true
     counter = 0
     loop do
-      condition = yield(container[counter])
+      condition = yield(container[counter]) if pattern.nil? && block_given?
+      condition = container[counter].is_a?(pattern) if !pattern.nil? && !pattern.is_a?(Regexp)
+      condition = (pattern.match(container[counter]) ? true : false) if !pattern.nil? && pattern.is_a?(Regexp)
       counter += 1
       break if counter >= len || !condition
     end
-    condition
+    condition 
   end
 
   def my_any?
