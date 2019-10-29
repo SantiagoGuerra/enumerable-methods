@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity
 # :nodoc:
 module Enumerable
   def my_each
@@ -9,21 +10,13 @@ module Enumerable
 
   def my_each_with_index
     container = to_a
-    if block_given?
-      container.size.times do |i|
-        yield(i)
-      end
-    else
-      container
-    end
+    block_given? ? container.size.times { |i| yield(i) } : container
   end
 
   def my_select
     container = to_a
     aux_container = []
-    container.my_each do |el|
-      aux_container << el if yield(el)
-    end
+    container.my_each { |el| aux_container << el if yield(el) }
     aux_container
   end
 
@@ -35,15 +28,15 @@ module Enumerable
     loop do
       condition = yield(container[counter]) if arg.nil? && block_given?
       if !arg.nil? && !arg.is_a?(Regexp)
-        condition = container[counter].is_a?(arg) 
+        condition = container[counter].is_a?(arg)
       end
       if !arg.nil? && arg.is_a?(Regexp)
-        condition = (arg.match(container[counter]) ? true : false) 
+        condition = (arg.match(container[counter]) ? true : false)
       end
       counter += 1
       break if counter >= len || !condition
     end
-    condition 
+    condition
   end
 
   def my_any?(arg = nil)
@@ -53,8 +46,12 @@ module Enumerable
     counter = 0
     loop do
       condition = yield(container[counter]) if arg.nil? && block_given?
-      condition = container[counter].is_a?(arg) if !arg.nil? && !arg.is_a?(Regexp)
-      condition = (arg.match(container[counter]) ? true : false) if !arg.nil? && arg.is_a?(Regexp)
+      if !arg.nil? && !arg.is_a?(Regexp)
+        condition = container[counter].is_a?(arg)
+      end
+      if !arg.nil? && arg.is_a?(Regexp)
+        condition = (arg.match(container[counter]) ? true : false)
+      end
       counter += 1
       break if counter >= len || condition
     end
@@ -121,3 +118,4 @@ def multiply_els(arr)
 end
 
 multiply_els([2, 4, 5])
+# rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity

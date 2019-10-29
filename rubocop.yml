@@ -11,13 +11,10 @@ Metrics/LineLength:
   Max: 120
 Metrics/MethodLength:
   Include: ["app/controllers/*"]
-  Max: 30
+  Max: 20
 Metrics/AbcSize:
-  Enabled: false
-Metrics/PerceivedComplexity:
-  Enabled: false
-Metrics/CyclomaticComplexity
-  Enabled: false
+  Include: ["app/controllers/*"]
+  Max: 30
 Metrics/ClassLength:
   Max: 150
 Metrics/BlockLength:
