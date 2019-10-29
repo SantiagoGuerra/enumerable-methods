@@ -83,10 +83,16 @@ module Enumerable
     end
   end
 
-  def my_map
+  def my_map(proc = nil)
     container = to_a
     aux_container = []
-    container.my_each { |item| aux_container << yield(item) }
+    if !proc.nil? && block_given?
+      container.my_each { |item| aux_container << proc.call(item)}
+    elsif block_given? || proc.nil?
+      container.my_each { |item| aux_container << yield(item) }
+    elsif !proc.nil? 
+      container.my_each { |item| aux_container << proc.call(item)}
+    end
     aux_container
   end
 
@@ -104,7 +110,7 @@ module Enumerable
 end
 
 def multiply_els arr
-  arr.my_inject {|memo, element| memo * element}
+  arr.my_inject :*
 end
 
 multiply_els([2,4,5])
