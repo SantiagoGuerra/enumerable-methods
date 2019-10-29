@@ -103,3 +103,8 @@ module Enumerable
   end
 end
 
+def multiply_els arr
+  arr.my_inject {|memo, element| memo * element}
+end
+
+multiply_els([2,4,5])
