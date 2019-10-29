@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
+# :nodoc:
 module Enumerable
-
   def my_each
     container = to_a
-    if block_given?
-      container.size.times do |x|
-        yield(container[x])
-      end
-    else
-      container
-    end
+    block_given? ? container.size.times { |x| yield(container[x]) } : container
   end
 
   def my_each_with_index
@@ -33,50 +27,56 @@ module Enumerable
     aux_container
   end
 
-  def my_all?(pattern = nil)
+  def my_all?(arg = nil)
     container = to_a
     len = container.size
-    condition = !container.empty? && pattern.nil? ? false : true
+    condition = !container.empty? && arg.nil? ? false : true
     counter = 0
     loop do
-      condition = yield(container[counter]) if pattern.nil? && block_given?
-      condition = container[counter].is_a?(pattern) if !pattern.nil? && !pattern.is_a?(Regexp)
-      condition = (pattern.match(container[counter]) ? true : false) if !pattern.nil? && pattern.is_a?(Regexp)
+      condition = yield(container[counter]) if arg.nil? && block_given?
+      if !arg.nil? && !arg.is_a?(Regexp)
+        condition = container[counter].is_a?(arg) 
+      end
+      if !arg.nil? && arg.is_a?(Regexp)
+        condition = (arg.match(container[counter]) ? true : false) 
+      end
       counter += 1
       break if counter >= len || !condition
     end
     condition 
   end
 
-  def my_any?(pattern = nil)
+  def my_any?(arg = nil)
     container = to_a
     len = container.size
-    condition = !container.empty? && pattern.nil? ? true : false
+    condition = !container.empty? && arg.nil? ? true : false
     counter = 0
     loop do
-      condition = yield(container[counter]) if pattern.nil? && block_given?
-      condition = container[counter].is_a?(pattern) if !pattern.nil? && !pattern.is_a?(Regexp)
-      condition = (pattern.match(container[counter]) ? true : false) if !pattern.nil? && pattern.is_a?(Regexp)
+      condition = yield(container[counter]) if arg.nil? && block_given?
+      condition = container[counter].is_a?(arg) if !arg.nil? && !arg.is_a?(Regexp)
+      condition = (arg.match(container[counter]) ? true : false) if !arg.nil? && arg.is_a?(Regexp)
       counter += 1
       break if counter >= len || condition
     end
-    condition 
+    condition
   end
 
-  def my_none? pattern = nil
+  def my_none?(arg = nil)
     container = to_a
     len = container.size
-    condition = !container.empty? && pattern.nil? ? true : false
+    condition = !container.empty? && arg.nil? ? true : false
     counter = 0
     loop do
-      condition = yield(container[counter]) if pattern.nil? && block_given?
-      condition = !!container[counter] if pattern.nil? && !block_given?
-      condition = container[counter].is_a?(pattern) if !pattern.nil? && !pattern.is_a?(Regexp)
-      condition = (pattern.match(container[counter]) ? true : false) if !pattern.nil? && pattern.is_a?(Regexp)
+      condition = yield(container[counter]) if arg.nil? && block_given?
+      condition = !container[counter].nil? if arg.nil? && !block_given?
+      condition = container[counter].is_a?(arg) unless arg.is_a?(Regexp)
+      if !arg.nil? && arg.is_a?(Regexp)
+        condition = (arg.match(container[counter]) ? true : false)
+      end
       counter += 1
       break if counter >= len || condition
     end
-    !condition 
+    !condition
   end
 
   def my_count(*num)
@@ -94,11 +94,11 @@ module Enumerable
     container = to_a
     aux_container = []
     if !proc.nil? && block_given?
-      container.my_each { |item| aux_container << proc.call(item)}
+      container.my_each { |item| aux_container << proc.call(item) }
     elsif block_given? || proc.nil?
       container.my_each { |item| aux_container << yield(item) }
-    elsif !proc.nil? 
-      container.my_each { |item| aux_container << proc.call(item)}
+    elsif !proc.nil?
+      container.my_each { |item| aux_container << proc.call(item) }
     end
     aux_container
   end
@@ -116,8 +116,8 @@ module Enumerable
   end
 end
 
-def multiply_els arr
+def multiply_els(arr)
   arr.my_inject :*
 end
 
-multiply_els([2,4,5])
+multiply_els([2, 4, 5])
