@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module Enumerable
+
   def my_each
-    container = self.to_a
+    container = to_a
     if block_given?
-      (container.size).times do |x|
+      container.size.times do |x|
         yield(container[x])
       end
     else
@@ -66,28 +69,37 @@ module Enumerable
       counter += 1
       break if counter >= len || condition
     end
-    if condition
-      false
-    else
-      true
-    end
+    !condition
   end
 
-  def my_count *num
+  def my_count(*num)
     container = to_a
     if block_given?
-      container.my_select {|item| yield(item)}.size
+      container.my_select { |item| yield(item) }.size
     elsif num.empty?
       container.size
     else
-      container.my_select {|item| item == num[0]}.size
+      container.my_select { |item| item == num[0] }.size
     end
   end
 
   def my_map
     container = to_a
     aux_container = []
-    container.my_each { |item| aux_container << yield(item)}
+    container.my_each { |item| aux_container << yield(item) }
     aux_container
   end
+
+  def my_inject(*args)
+    container = to_a
+    initial = container.shift
+    container.unshift args[0] if args[0].class != Symbol && !args.empty?
+    container.my_each do |item|
+      initial = yield(initial, item) if block_given?
+      initial = initial.send(args[1], item) if args[1].class == Symbol
+      initial = initial.send(args[0], item) if args[0].class == Symbol
+    end
+    initial
+  end
 end
+
