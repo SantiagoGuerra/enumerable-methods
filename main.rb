@@ -5,7 +5,7 @@
 module Enumerable
   def my_each
     container = to_a
-    block_given? ? container.size.times { |x| yield(container[x]) } : container
+    block_given? ? container.size.times { |x| yield(container[x]) } : to_enum(:my_each)
   end
 
   def my_each_with_index
