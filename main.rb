@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength
+# rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength, Layout/EndOfLine
 # :nodoc:
 module Enumerable
   def my_each
@@ -33,20 +33,24 @@ module Enumerable
   def my_all?(arg = nil)
     container = to_a
     len = container.size
-    condition = !container.empty? && arg.nil? ? false : true
+    condition = true
     counter = 0
     loop do
       condition = yield(container[counter]) if arg.nil? && block_given?
-      if !arg.nil? && !arg.is_a?(Regexp)
+      condition = container[counter] == arg if arg.is_a?(Integer)
+      if !arg.nil? && !arg.is_a?(Regexp) && !arg.is_a?(Integer)
         condition = container[counter].is_a?(arg)
       end
       if !arg.nil? && arg.is_a?(Regexp)
         condition = (arg.match(container[counter]) ? true : false)
       end
+      if arg.nil? && !block_given?
+        condition = container[counter] ? true : false
+      end
       counter += 1
       break if counter >= len || !condition
     end
-    condition
+    condition = len.zero? ? true : condition
   end
 
   def my_any?(arg = nil)
@@ -129,4 +133,4 @@ end
 
 multiply_els([2, 4, 5])
 
-# rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength
+# rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength, Layout/EndOfLine
