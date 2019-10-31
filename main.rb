@@ -116,14 +116,16 @@ module Enumerable
   def my_map(proc = nil)
     container = to_a
     aux_container = []
-    if !proc.nil? && block_given?
+    if block_given? && !proc.nil?
       container.my_each { |item| aux_container << proc.call(item) }
-    elsif block_given? || proc.nil?
-      container.my_each { |item| aux_container << yield(item) }
-    elsif !proc.nil?
-      container.my_each { |item| aux_container << proc.call(item) }
+      aux_container
     end
-    aux_container
+    if proc.nil? && block_given? 
+      container.my_each { |item| aux_container << yield(item)}
+      aux_container
+    elsif proc.nil? && !block_given?
+      to_enum(:my_map)
+    end
   end
 
   def my_inject(*args)
@@ -144,5 +146,7 @@ def multiply_els(arr)
 end
 
 multiply_els([2, 4, 5])
+
+procc = proc {|x| x + 2}
 
 # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength, Layout/EndOfLine
