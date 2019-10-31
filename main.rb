@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength, Layout/EndOfLine
+# rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength
 # :nodoc:
 module Enumerable
   def my_each
@@ -148,4 +148,4 @@ end
 
 multiply_els([2, 4, 5])
 
-# rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength, Layout/EndOfLine
+# rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength, Metrics/ModuleLength
