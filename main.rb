@@ -10,7 +10,11 @@ module Enumerable
 
   def my_each_with_index
     container = to_a
-    block_given? ? container.size.times { |i| yield(i) } : to_enum(:my_each)
+    if block_given?
+      container.size.times { |index| yield(container[index], index) }
+      container
+    else to_enum(:my_each_with_index)
+    end
   end
 
   def my_select
@@ -118,4 +122,5 @@ def multiply_els(arr)
 end
 
 multiply_els([2, 4, 5])
+
 # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/LineLength
