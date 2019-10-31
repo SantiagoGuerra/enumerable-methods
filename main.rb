@@ -38,6 +38,7 @@ module Enumerable
     loop do
       condition = yield(container[counter]) if arg.nil? && block_given?
       condition = container[counter] == arg if arg.is_a?(Integer)
+      condition = container[counter] == arg if arg.is_a?(String)
       if !arg.nil? && !arg.is_a?(Regexp) && !arg.is_a?(Integer)
         condition = container[counter].is_a?(arg)
       end
@@ -54,22 +55,43 @@ module Enumerable
   end
 
   def my_any?(arg = nil)
+    # container = to_a
+    # len = container.size
+    # condition = !container.empty? && arg.nil? ? true : false
+    # counter = 0
+    # loop do
+    #   condition = yield(container[counter]) if arg.nil? && block_given?
+    #   if !arg.nil? && !arg.is_a?(Regexp)
+    #     condition = container[counter].is_a?(arg)
+    #   end
+    #   if !arg.nil? && arg.is_a?(Regexp)
+    #     condition = (arg.match(container[counter]) ? true : false)
+    #   end
+    #   counter += 1
+    #   break if counter >= len || condition
+    # end
+    # condition
     container = to_a
     len = container.size
-    condition = !container.empty? && arg.nil? ? true : false
+    condition = true
     counter = 0
     loop do
       condition = yield(container[counter]) if arg.nil? && block_given?
-      if !arg.nil? && !arg.is_a?(Regexp)
+      condition = container[counter] == arg if arg.is_a?(Integer)
+      condition = container[counter] == arg if arg.is_a?(String)
+      if !arg.nil? && !arg.is_a?(Regexp) && !arg.is_a?(Integer) && !arg.is_a?(String)
         condition = container[counter].is_a?(arg)
       end
       if !arg.nil? && arg.is_a?(Regexp)
         condition = (arg.match(container[counter]) ? true : false)
       end
+      if arg.nil? && !block_given?
+        condition = container[counter] ? true : false
+      end
       counter += 1
       break if counter >= len || condition
     end
-    condition
+    condition = len.zero? ? true : condition
   end
 
   def my_none?(arg = nil)
