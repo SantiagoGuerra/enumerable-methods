@@ -12,16 +12,22 @@ module Enumerable
     container = to_a
     if block_given?
       container.size.times { |index| yield(container[index], index) }
-      container
-    else to_enum(:my_each_with_index)
+    else
+      to_enum(:my_each_with_index)
     end
+    container
   end
 
   def my_select
     container = to_a
     aux_container = []
-    container.my_each { |el| aux_container << el if yield(el) }
-    aux_container
+    if block_given?
+      container.my_each { |el| aux_container << el if yield(el) }
+      aux_container
+    else
+      to_enum(:my_each_with_index)
+      container
+    end
   end
 
   def my_all?(arg = nil)
