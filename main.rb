@@ -10,7 +10,7 @@ module Enumerable
 
   def my_each_with_index
     container = to_a
-    block_given? ? container.size.times { |i| yield(i) } : container
+    block_given? ? container.size.times { |i| yield(i) } : to_enum(:my_each)
   end
 
   def my_select
