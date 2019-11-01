@@ -14,8 +14,6 @@ module Enumerable
       container.size.times { |index| yield(container[index], index) }
     else
       to_enum(:my_each_with_index)
-    end
-    container
   end
 
   def my_select
