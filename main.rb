@@ -92,7 +92,7 @@ module Enumerable
         condition = (arg.match(container[counter]) ? true : false)
       end
       if arg.nil? && !block_given?
-        condition = container[counter] ? false : true
+        condition = container[counter] ? true : false
       end
       counter += 1
       break if counter >= len || condition
